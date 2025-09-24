@@ -1,7 +1,10 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  /* config options here */
+  serverExternalPackages: [
+    '@sequelize/core',
+    '@sequelize/postgres'
+  ]
 };
 
 export default nextConfig;
