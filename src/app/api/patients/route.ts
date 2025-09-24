@@ -1,9 +1,12 @@
-import { createPatient, getPatients } from '@/lib/database';
 import { NextRequest, NextResponse } from 'next/server';
+import { createPatient, getPatients } from '@/lib/database';
+import { dbReady } from '@/lib/database';
 
 export async function POST(request: NextRequest) {
   try {
+    await dbReady;
     const formData = await request.formData();
+    
     const patientData = {
       fullName: formData.get('fullName') as string,
       email: formData.get('email') as string,
@@ -11,14 +14,18 @@ export async function POST(request: NextRequest) {
       phoneNumber: formData.get('phoneNumber') as string,
     };
 
-    if (!patientData.fullName || !patientData.email) {
-      return NextResponse.json(
-        { success: false, error: 'Full name and email are required' },
-        { status: 400 }
-      );
+    let documentPhoto = undefined;
+    const photoFile = formData.get('documentPhoto') as File | null;
+    
+    if (photoFile && photoFile.size > 0) {
+      const bytes = await photoFile.arrayBuffer();
+      documentPhoto = Buffer.from(bytes);
     }
 
-    const patient = await createPatient(patientData);
+    const patient = await createPatient({
+      ...patientData,
+      documentPhoto
+    });
 
     return NextResponse.json(
       { 
@@ -30,18 +37,16 @@ export async function POST(request: NextRequest) {
     );
 
   } catch (error: any) {
-    console.error('Database error:', error);
-    
     if (error.name === 'SequelizeUniqueConstraintError' || 
         (error.errors && error.errors.some((e: any) => e.path === 'email')) ||
         error.message?.includes('unique constraint')) {
       
       return NextResponse.json(
         { success: false, error: 'A patient with this email already exists' },
-        { status: 409 }
+        { status: 400 }
       );
     }
-  
+
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }
@@ -50,15 +55,14 @@ export async function POST(request: NextRequest) {
 }
 
 export async function GET() {
-    const patients = await getPatients();
   try {
+    await dbReady;
+    const patients = await getPatients();
     return NextResponse.json({
       success: true,
       patients: patients
     });
-
   } catch (error) {
-    console.error('Error fetching patients:', error);
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

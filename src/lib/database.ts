@@ -17,7 +17,7 @@ class PatientModel extends Model {
   public email!: string;
   public phoneCountryCode!: string;
   public phoneNumber!: string;
-  public documentPhotoPath?: string;
+  public documentPhoto?: Buffer;
 }
 
 PatientModel.init({
@@ -43,8 +43,8 @@ PatientModel.init({
     type: DataTypes.STRING,
     allowNull: false,
   },
-  documentPhotoPath: {
-    type: DataTypes.STRING,
+  documentPhoto: {
+    type: DataTypes.BLOB,
     allowNull: true,
   }
 }, {
@@ -54,20 +54,51 @@ PatientModel.init({
   timestamps: false,
 });
 
-sequelize.sync();
+// Initialize the database connection and synchronize models once at startup.
+export const dbReady: Promise<void> = (async () => {
+  await sequelize.authenticate();
+  await sequelize.sync();
+})();
 
 export async function createPatient(data: {
   fullName: string;
   email: string;
   phoneCountryCode: string;
   phoneNumber: string;
-  documentPhotoPath?: string;
+  documentPhoto?: Buffer;
 }) {
   const patient = await PatientModel.create(data);
-  return patient.toJSON();
+  const result = patient.toJSON();
+  if (result.documentPhoto) {
+    result.hasPhoto = true;
+    delete result.documentPhoto;
+  }
+  return result;
 }
 
 export async function getPatients() {
-  const patients = await PatientModel.findAll();
-  return patients.map(p => p.toJSON());
+  const patients = await PatientModel.findAll({
+    attributes: ['id', 'fullName', 'email', 'phoneCountryCode', 'phoneNumber', 'documentPhoto']
+  });
+  return patients.map(p => {
+    const result: any = p.toJSON();
+    result.hasPhoto = !!result.documentPhoto;
+    delete result.documentPhoto;
+    return result;
+  });
+}
+
+export async function getPatientPhoto(id: number) {
+  const patient = await PatientModel.findByPk(id, {
+    attributes: ['documentPhoto']
+  });
+  
+  if (!patient || !patient.documentPhoto) {
+    return null;
+  }
+  
+  return {
+    photo: patient.documentPhoto,
+    type: 'image/jpeg'
+  };
 }

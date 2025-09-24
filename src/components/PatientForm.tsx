@@ -215,9 +215,6 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
               <span className={styles.fileIcon}>📄</span>
               <div className={styles.fileInfo}>
                 <p className={styles.fileName}>{formData.documentPhoto.name}</p>
-                <p className={styles.fileSize}>
-                  {(formData.documentPhoto.size / 1024 / 1024).toFixed(2)} MB
-                </p>
               </div>
               <button
                 type="button"
@@ -245,7 +242,6 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
         </div>
         {errors.documentPhoto && showErrors && (
           <div className={styles.errorMessage}>
-            <span className={styles.errorIcon}>⚠️</span>
             {errors.documentPhoto}
           </div>
         )}

@@ -36,7 +36,6 @@ export default function PatientsPage() {
     }
   };
 
-  // Loading state
   if (loading) {
     return (
       <div className={styles.container}>
@@ -48,7 +47,6 @@ export default function PatientsPage() {
     );
   }
 
-  // Error state
   if (error) {
     return (
       <div className={styles.container}>
@@ -70,7 +68,6 @@ export default function PatientsPage() {
 
   return (
     <div className={styles.container}>
-      {/* Header */}
       <div className={styles.header}>
         <h1 className={styles.title}>Patients</h1>
         <Link 
@@ -81,7 +78,6 @@ export default function PatientsPage() {
         </Link>
       </div>
 
-      {/* Empty state */}
       {patients.length === 0 ? (
         <div className={styles.emptyState}>
           <div className={styles.emptyIcon}>👥</div>
@@ -97,12 +93,11 @@ export default function PatientsPage() {
           </Link>
         </div>
       ) : (
-        /* Patients grid */
         <div className={styles.patientsGrid}>
           {patients.map((patient) => (
-            <PatientCard 
-              key={patient.id} 
-              patient={patient} 
+            <PatientCard
+              key={patient.id}
+              patient={patient}
               onUpdate={fetchPatients}
             />
           ))}

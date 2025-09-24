@@ -41,7 +41,16 @@ export default function NewPatientPage() {
         setShowModal(true);
       } else {
         setModalState('error');
-        setModalMessage(result.error || 'Failed to register patient');
+        
+        let errorMessage = result.error || 'Failed to register patient';
+        
+        if (response.status === 409) {
+          errorMessage = `Email ${data.email} is already registered. Please use a different email address.`;
+        } else if (response.status === 400) {
+          errorMessage = `${result.error}`;
+        }
+        
+        setModalMessage(errorMessage);
         setShowModal(true);
       }
     } catch (error) {
@@ -88,7 +97,7 @@ export default function NewPatientPage() {
         show={showModal}
         onClose={handleModalClose}
         type={modalState}
-        title={modalState === 'success' ? '✅ Success!' : '❌ Error'}
+        title={modalState === 'success' ? 'Success!' : 'Error'}
         message={modalMessage}
         primaryButtonText={modalState === 'success' ? 'View Patients' : 'Try Again'}
         secondaryButtonText={modalState === 'success' ? undefined : 'Cancel'}

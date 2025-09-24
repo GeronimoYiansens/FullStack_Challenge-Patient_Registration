@@ -4,34 +4,35 @@ export interface Patient {
     email: string;
     phoneCountryCode: string;
     phoneNumber: string;
-    documentPhotoPath?: string;
-}
-
-export interface CreatePatientRequest {
+    hasPhoto?: boolean;
+  }
+  
+  export interface CreatePatientRequest {
     fullName: string;
     email: string;
     phoneCountryCode: string;
     phoneNumber: string;
     documentPhoto: File;
-}
-
-export interface PatientResponse {
+  }
+  
+  export interface PatientResponse {
     success: boolean;
     patient?: Patient;
     error?: string;
-}
-
-export interface PatientsListResponse {
+    message?: string;
+  }
+  
+  export interface PatientsListResponse {
     success: boolean;
     patients?: Patient[];
     error?: string;
-}
-
-export const CountryCode = {
-    Uruguay: '+598',
-    Argentina: '+54',
-    Brazil: '+55',
-    Chile: '+56',
-    UnitedStates: '+1',
-    Spain: '+34',
-} as const;
+  }
+  
+  export enum CountryCode {
+    URUGUAY = '+598',
+    ARGENTINA = '+54',
+    BRAZIL = '+55',
+    CHILE = '+56',
+    USA = '+1',
+    SPAIN = '+34'
+  }

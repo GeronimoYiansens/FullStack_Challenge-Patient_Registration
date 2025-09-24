@@ -23,7 +23,6 @@ export default function Modal({
   secondaryButtonText
 }: ModalProps) {
   
-  // Cerrar modal con Escape
   useEffect(() => {
     const handleEscape = (e: KeyboardEvent) => {
       if (e.key === 'Escape' && show) {
@@ -35,7 +34,6 @@ export default function Modal({
     return () => document.removeEventListener('keydown', handleEscape);
   }, [show, onClose]);
 
-  // Prevenir scroll del body cuando modal está abierto
   useEffect(() => {
     if (show) {
       document.body.style.overflow = 'hidden';
@@ -62,7 +60,6 @@ export default function Modal({
       onClick={handleBackdropClick}
     >
       <div className={`${styles.modal} ${styles[type]} ${show ? styles.modalVisible : ''}`}>
-        {/* Header */}
         <div className={styles.modalHeader}>
           <h2 className={styles.modalTitle}>{title}</h2>
           <button 
@@ -74,7 +71,6 @@ export default function Modal({
           </button>
         </div>
 
-        {/* Content */}
         <div className={styles.modalContent}>
           <div className={styles.iconContainer}>
             {type === 'success' ? (
@@ -94,7 +90,6 @@ export default function Modal({
           <p className={styles.modalMessage}>{message}</p>
         </div>
 
-        {/* Actions */}
         <div className={styles.modalActions}>
           <button
             className={`${styles.button} ${styles.primaryButton} ${styles[type + 'Button']}`}
