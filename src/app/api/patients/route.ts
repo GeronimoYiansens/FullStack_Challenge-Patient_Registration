@@ -29,8 +29,19 @@ export async function POST(request: NextRequest) {
       { status: 200 }
     );
 
-  } catch (error) {
-    console.error('Error creating patient:', error);
+  } catch (error: any) {
+    console.error('Database error:', error);
+    
+    if (error.name === 'SequelizeUniqueConstraintError' || 
+        (error.errors && error.errors.some((e: any) => e.path === 'email')) ||
+        error.message?.includes('unique constraint')) {
+      
+      return NextResponse.json(
+        { success: false, error: 'A patient with this email already exists' },
+        { status: 409 }
+      );
+    }
+  
     return NextResponse.json(
       { success: false, error: 'Internal server error' },
       { status: 500 }

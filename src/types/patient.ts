@@ -26,3 +26,12 @@ export interface PatientsListResponse {
     patients?: Patient[];
     error?: string;
 }
+
+export const CountryCode = {
+    Uruguay: '+598',
+    Argentina: '+54',
+    Brazil: '+55',
+    Chile: '+56',
+    UnitedStates: '+1',
+    Spain: '+34',
+} as const;

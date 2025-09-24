@@ -1,0 +1,194 @@
+/* Container principal */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    gap: 1rem;
+  }
+  
+  .title {
+    font-size: 2.5rem;
+    font-weight: 700;
+    color: #1f2937;
+    margin: 0;
+  }
+  
+  .addButton {
+    background: linear-gradient(135deg, #3b82f6 0%, #1d4ed8 100%);
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.875rem;
+    transition: all 0.2s ease;
+    border: none;
+    cursor: pointer;
+    box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3);
+  }
+  
+  .addButton:hover {
+    background: linear-gradient(135deg, #2563eb 0%, #1e40af 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px -1px rgba(59, 130, 246, 0.4);
+  }
+  
+  /* Loading state */
+  .loadingContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 50vh;
+    gap: 1rem;
+  }
+  
+  .spinner {
+    width: 40px;
+    height: 40px;
+    border: 4px solid #e5e7eb;
+    border-top: 4px solid #3b82f6;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+  }
+  
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+  
+  .loadingText {
+    font-size: 1.125rem;
+    color: #6b7280;
+    margin: 0;
+  }
+  
+  /* Error state */
+  .errorContainer {
+    text-align: center;
+  }
+  
+  .errorMessage {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin: 2rem 0;
+    color: #dc2626;
+  }
+  
+  .errorMessage p {
+    margin: 0 0 1rem 0;
+    font-size: 1.125rem;
+  }
+  
+  .retryButton {
+    background: #dc2626;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s ease;
+  }
+  
+  .retryButton:hover {
+    background: #b91c1c;
+  }
+  
+  /* Empty state */
+  .emptyState {
+    text-align: center;
+    padding: 4rem 2rem;
+    max-width: 500px;
+    margin: 2rem auto;
+  }
+  
+  .emptyIcon {
+    font-size: 4rem;
+    margin-bottom: 1rem;
+    opacity: 0.6;
+  }
+  
+  .emptyTitle {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #374151;
+    margin: 0 0 0.5rem 0;
+  }
+  
+  .emptyDescription {
+    font-size: 1rem;
+    color: #6b7280;
+    margin: 0 0 2rem 0;
+    line-height: 1.5;
+  }
+  
+  .primaryButton {
+    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    color: white;
+    padding: 0.875rem 2rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.2s ease;
+    display: inline-block;
+    box-shadow: 0 4px 6px -1px rgba(16, 185, 129, 0.3);
+  }
+  
+  .primaryButton:hover {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+    transform: translateY(-1px);
+    box-shadow: 0 8px 25px -1px rgba(16, 185, 129, 0.4);
+  }
+  
+  /* Patients grid */
+  .patientsGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+  
+  /* Responsive */
+  @media (max-width: 768px) {
+    .container {
+      padding: 1rem 0.75rem;
+    }
+  
+    .header {
+      flex-direction: column;
+      align-items: stretch;
+      gap: 1rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+      text-align: center;
+    }
+  
+    .addButton {
+      text-align: center;
+      padding: 1rem;
+    }
+  
+    .patientsGrid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  
+    .emptyState {
+      padding: 2rem 1rem;
+    }
+  }
