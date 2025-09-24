@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect, useRef } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { CreatePatientRequest, CountryCode } from '@/types/patient';
+import { CreatePatientRequest } from '@/types/patient';
+import { COUNTRY_DIAL_CODES } from '@/lib/countryCodes';
 import styles from './PatientForm.module.css';
 
 interface PatientFormProps {
@@ -30,6 +31,8 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
   const [errors, setErrors] = useState<FormErrors>({});
   const [showErrors, setShowErrors] = useState(false);
   const [dragActive, setDragActive] = useState(false);
+  const [isCountryCodeMenuOpen, setIsCountryCodeMenuOpen] = useState(false);
+  const countryCodeWrapperRef = useRef<HTMLDivElement | null>(null);
 
   const validateField = (field: string, value: any): string | undefined => {
     switch (field) {
@@ -82,6 +85,22 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
 
     return newErrors;
   };
+
+  const getCountryCodeLabel = (code: string): string => {
+    const match = COUNTRY_DIAL_CODES.find(c => c.code === code);
+    return match ? `${match.name} (${match.code})` : code;
+  };
+
+  useEffect(() => {
+    const handleOutsideClick = (event: MouseEvent) => {
+      if (!isCountryCodeMenuOpen) return;
+      if (countryCodeWrapperRef.current && !countryCodeWrapperRef.current.contains(event.target as Node)) {
+        setIsCountryCodeMenuOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleOutsideClick);
+    return () => document.removeEventListener('mousedown', handleOutsideClick);
+  }, [isCountryCodeMenuOpen]);
 
   const handleInputChange = (field: keyof CreatePatientRequest, value: any) => {
     setFormData(prev => ({ ...prev, [field]: value }));
@@ -170,18 +189,38 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
           Phone Number <span className={styles.required}>*</span>
         </label>
         <div className={styles.phoneGroup}>
-          <select
-            className={`${styles.select} ${styles.countryCode} ${errors.phoneCountryCode && showErrors ? styles.inputError : ''}`}
-            value={formData.phoneCountryCode}
-            onChange={(e) => handleInputChange('phoneCountryCode', e.target.value)}
-            disabled={submitting}
-          >
-            {Object.entries(CountryCode).map(([country, code]) => (
-              <option key={country} value={code}>
-                {code}
-              </option>
-            ))}
-          </select>
+          <div className={`${styles.countryCodeWrapper}`} ref={countryCodeWrapperRef}>
+            <button
+              type="button"
+              className={`${styles.select} ${styles.countryCode} ${styles.dropdownToggle} ${errors.phoneCountryCode && showErrors ? styles.inputError : ''}`}
+              onClick={() => setIsCountryCodeMenuOpen(prev => !prev)}
+              disabled={submitting}
+              aria-haspopup="listbox"
+              aria-expanded={isCountryCodeMenuOpen}
+            >
+              <span>{getCountryCodeLabel(formData.phoneCountryCode)}</span>
+              <span className={styles.dropdownCaret}>▾</span>
+            </button>
+
+            {isCountryCodeMenuOpen && (
+              <div className={styles.dropdownMenu} role="listbox">
+                {COUNTRY_DIAL_CODES.map(({ name, code }) => (
+                  <div
+                    key={`${name}-${code}`}
+                    role="option"
+                    aria-selected={formData.phoneCountryCode === code}
+                    className={styles.dropdownItem}
+                    onClick={() => {
+                      handleInputChange('phoneCountryCode', code);
+                      setIsCountryCodeMenuOpen(false);
+                    }}
+                  >
+                    {name} ({code})
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
 
           <input
             type="tel"

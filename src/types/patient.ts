@@ -28,11 +28,4 @@ export interface Patient {
     error?: string;
   }
   
-  export enum CountryCode {
-    URUGUAY = '+598',
-    ARGENTINA = '+54',
-    BRAZIL = '+55',
-    CHILE = '+56',
-    USA = '+1',
-    SPAIN = '+34'
-  }
+// Country dial codes have moved to `src/lib/countryCodes.ts`
