@@ -38,7 +38,7 @@ export default function PatientForm({ onSubmit, submitting }: PatientFormProps) 
     switch (field) {
       case 'fullName':
         if (!value.trim()) return 'Full name is required';
-        if (!/^[a-zA-Z\s]+$/.test(value)) return 'Full name should only contain letters and spaces';
+        if (!/^[\p{L}\s]+$/u.test(value)) return 'Full name should only contain letters and spaces';
         if (value.trim().length < 2) return 'Full name must be at least 2 characters';
         return undefined;
 
